@@ -6,7 +6,7 @@ define('DB_PASS', '');
 define('DB_TABLE', 'shorty');
 
 define('METHOD', $_SERVER['REQUEST_METHOD']);
-define('PATH', isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
+define('PATH', isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '/');
 
 $error = null;
 
@@ -61,8 +61,8 @@ if (METHOD == 'GET' && PATH != '/' && PATH != '')
 
 	if ($url)
 	{
-		// header("Location: $url", true, 301);
-		die($url);
+		header("Location: $url", true, 301);
+//		die($url);
 		exit;
 	}
 	else
@@ -76,8 +76,9 @@ if ((METHOD == 'GET' && (PATH == '/' || PATH == '')) || $error)
 	?>
 	<title>Shorty</title>
 	<?php if ($error) : ?>
-	<p style="color:red;"><b>Error:</b> <?php echo $error; ?></p>
-<?php endif; ?>
+		<style>.error { color: red; }</style>
+		<p class="error"><b>Error:</b> <?php echo $error; ?></p>
+	<?php endif; ?>
 	<form method="POST" action="/">
 		<input name="url">
 		<button>Shorten it, Shorty!</button>
