@@ -1,17 +1,18 @@
 <?php
 
+require '../vendor/autoload.php';
+
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_TABLE', 'shorty');
 
 define('METHOD', $_SERVER['REQUEST_METHOD']);
-define('PATH', isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '/');
+define('PATH', isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
+
+$urlRepository = new \Shorty\UrlRepository();
 
 $error = null;
-
-$db = @mysql_connect(DB_HOST, DB_USER, DB_PASS) or die ('Can\'t connect to DB server');
-@mysql_select_db(DB_TABLE, $db) or die ('Database not found on server');
 
 if (METHOD == 'POST' && (PATH == '/' || PATH == ''))
 {
@@ -20,9 +21,7 @@ if (METHOD == 'POST' && (PATH == '/' || PATH == ''))
 	}
 	else {
 		$url = $_POST['url'];
-		$result = @mysql_query("SELECT tag FROM urls WHERE url = '$url' LIMIT 1") or die ('Error');
-		$row = mysql_fetch_array($result);
-		$tag = $row['tag'];
+		$tag = $urlRepository->findTagByUrl($url);
 
 		if ($tag)
 		{
@@ -38,7 +37,7 @@ if (METHOD == 'POST' && (PATH == '/' || PATH == ''))
 				$tag = '';
 				for ($i = 0; $i < 10; $i++) $tag .= $chars[rand(0, strlen($chars) - 1)];
 
-				if (@mysql_query("INSERT INTO urls (tag, url, created_at) VALUES ('$tag', '$url', NOW())")) {
+				if ($urlRepository->insert($tag, $url)) {
 					$link = 'http://'.$_SERVER['HTTP_HOST'].'/'.$tag;
 					die("<a href='$link'>$link</a>");
 				}
@@ -55,9 +54,7 @@ if (METHOD == 'GET' && PATH != '/' && PATH != '')
 {
 	$key = ltrim(PATH, '/');
 
-	$result = @mysql_query("SELECT url FROM urls WHERE tag = '$key' LIMIT 1") or die ('Error');
-	$row = mysql_fetch_array($result);
-	$url = $row['url'];
+	$url = $urlRepository->findUrlByTag($key);
 
 	if ($url)
 	{
