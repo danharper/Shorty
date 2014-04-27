@@ -21,8 +21,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase {
 		$this->client = new Client;
 		$this->crawler = $this->client->request('GET', self::ROOT_URL);
 
-		$this->db = new PDO('mysql:host=localhost;dbname=shorty;charset=utf8', 'root', '');
-		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->db = (new \Shorty\PdoFactory())->getConnection();
 		$this->db->exec("DELETE FROM urls");
 	}
 

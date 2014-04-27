@@ -12,7 +12,8 @@ class UrlRepositoryTest extends \PHPUnit_Extensions_Database_TestCase {
 	public function setUp()
 	{
 		parent::setUp();
-		$this->sut = new UrlRepository;
+		$factory = new \Shorty\PdoFactory();
+		$this->sut = new UrlRepository($factory->getConnection());
 	}
 
 	public function testFindUrlByTagReturnsNullWhenNotFound()

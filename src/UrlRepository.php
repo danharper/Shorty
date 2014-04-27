@@ -2,6 +2,11 @@
 
 class UrlRepository {
 
+	public function __construct(\PDO $connection)
+	{
+		$this->db = $connection;
+	}
+
 	public function findUrlByTag($tag)
 	{
 		$result = $this->select('SELECT url FROM urls WHERE tag = :tag LIMIT 1', ['tag' => $tag]);
@@ -47,10 +52,7 @@ class UrlRepository {
 	 */
 	private function getConnection()
 	{
-		$db = new \PDO('mysql:host=localhost;dbname=shorty', 'root', '');
-		$db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-		return $db;
+		return $this->db;
 	}
 
 }

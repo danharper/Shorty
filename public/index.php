@@ -10,7 +10,8 @@ define('DB_TABLE', 'shorty');
 define('METHOD', $_SERVER['REQUEST_METHOD']);
 define('PATH', isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
 
-$urlRepository = new \Shorty\UrlRepository();
+$factory = new \Shorty\PdoFactory();
+$urlRepository = new \Shorty\UrlRepository($factory->getConnection());
 
 $error = null;
 
