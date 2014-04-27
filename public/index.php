@@ -30,7 +30,8 @@ if (METHOD == 'GET' && (PATH == '/' || PATH == ''))
 
 if ($controller)
 {
-	echo $controller();
+	$response = $controller();
+	$response->send();
 	die;
 }
 else

@@ -1,6 +1,7 @@
 <?php namespace Shorty\Controller;
 
 use Shorty\UrlRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class TagRedirectController {
 
@@ -17,14 +18,12 @@ class TagRedirectController {
 
 		if ($url)
 		{
-			header("Location: $url", true, 301);
-			exit;
+			return new RedirectResponse($url, 301);
 		}
 		else
 		{
 			$_SESSION['error_flash'] = 'Shortened URL not found';
-			header("Location: /", true, 302);
-			die;
+			return new RedirectResponse('/');
 		}
 	}
 

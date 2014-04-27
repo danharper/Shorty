@@ -1,5 +1,7 @@
 <?php namespace Shorty\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class HomeController {
 
 	public function __invoke()
@@ -9,11 +11,11 @@ class HomeController {
 			unset($_SESSION['error_flash']);
 		}
 		else {
-			$error = null;
+			$error2 = null;
 		}
 
 		$view = new \Shorty\View();
-		return $view->render('home', ['error' => $error2]);
+		return new Response($view->render('home', ['error' => $error2]));
 	}
 
 } 

@@ -1,6 +1,7 @@
 <?php namespace Shorty\Controller;
 
 use Shorty\UrlRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CreateTagController {
 
@@ -13,8 +14,7 @@ class CreateTagController {
 	{
 		if ( ! array_key_exists('url', $_POST) || ! $_POST['url']) {
 			$_SESSION['error_flash'] = 'No URL Given';
-			header("Location: /", true, 302);
-			die;
+			return new RedirectResponse('/');
 		}
 		else {
 			$url = $_POST['url'];

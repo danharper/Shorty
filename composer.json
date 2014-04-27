@@ -8,5 +8,8 @@
 		"psr-4": {
 			"Shorty\\": "src"
 		}
-	}
+	},
+    "require": {
+        "symfony/http-foundation": "~2.4"
+    }
 }
