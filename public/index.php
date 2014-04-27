@@ -38,7 +38,9 @@ if (METHOD == 'GET' && PATH != '/' && PATH != '')
 	}
 	else
 	{
-		$error = 'Shortened URL not found';
+		$_SESSION['error_flash'] = 'Shortened URL not found';
+		header("Location: /", true, 302);
+		die;
 	}
 }
 
