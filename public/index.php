@@ -9,14 +9,6 @@ define('PATH', isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
 
 $urlRepository = new \Shorty\UrlRepository(new \Shorty\MySqlPdoFactory());
 
-if (array_key_exists('error_flash', $_SESSION)) {
-	$error = $_SESSION['error_flash'];
-	unset($_SESSION['error_flash']);
-}
-else {
-	$error = null;
-}
-
 if (METHOD == 'POST' && (PATH == '/' || PATH == ''))
 {
 	$controller = new \Shorty\Controller\CreateTagController($urlRepository);
@@ -26,26 +18,21 @@ if (METHOD == 'POST' && (PATH == '/' || PATH == ''))
 
 if (METHOD == 'GET' && PATH != '/' && PATH != '')
 {
-	$key = ltrim(PATH, '/');
-
-	$url = $urlRepository->findUrlByTag($key);
-
-	if ($url)
-	{
-		header("Location: $url", true, 301);
-//		die($url);
-		exit;
-	}
-	else
-	{
-		$_SESSION['error_flash'] = 'Shortened URL not found';
-		header("Location: /", true, 302);
-		die;
-	}
+	$controller = new \Shorty\Controller\TagRedirectController($urlRepository);
+	$controller();
+	die;
 }
 
-if ((METHOD == 'GET' && (PATH == '/' || PATH == '')) || $error)
+if (METHOD == 'GET' && (PATH == '/' || PATH == ''))
 {
+	if (array_key_exists('error_flash', $_SESSION)) {
+		$error = $_SESSION['error_flash'];
+		unset($_SESSION['error_flash']);
+	}
+	else {
+		$error = null;
+	}
+
 	?>
 	<title>Shorty</title>
 	<?php if ($error) : ?>
