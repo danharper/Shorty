@@ -2,17 +2,27 @@
 
 require '../vendor/autoload.php';
 
+session_start();
+
 define('METHOD', $_SERVER['REQUEST_METHOD']);
 define('PATH', isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
 
 $urlRepository = new \Shorty\UrlRepository(new \Shorty\MySqlPdoFactory());
 
-$error = null;
+if (array_key_exists('error_flash', $_SESSION)) {
+	$error = $_SESSION['error_flash'];
+	unset($_SESSION['error_flash']);
+}
+else {
+	$error = null;
+}
 
 if (METHOD == 'POST' && (PATH == '/' || PATH == ''))
 {
 	if ( ! array_key_exists('url', $_POST) || ! $_POST['url']) {
-		$error = 'No URL Given';
+		$_SESSION['error_flash'] = 'No URL Given';
+		header("Location: /", true, 302);
+		die;
 	}
 	else {
 		$url = $_POST['url'];
