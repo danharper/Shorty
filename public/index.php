@@ -2,6 +2,8 @@
 
 require '../vendor/autoload.php';
 
+define('TEMPLATE_ROOT', '../web');
+
 session_start();
 
 define('METHOD', $_SERVER['REQUEST_METHOD']);
