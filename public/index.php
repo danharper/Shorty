@@ -2,11 +2,6 @@
 
 require '../vendor/autoload.php';
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_TABLE', 'shorty');
-
 define('METHOD', $_SERVER['REQUEST_METHOD']);
 define('PATH', isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
 
