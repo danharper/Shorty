@@ -2,9 +2,9 @@
 
 class UrlRepository {
 
-	public function __construct(\PDO $connection)
+	public function __construct(PdoFactory $pdo)
 	{
-		$this->db = $connection;
+		$this->pdo = $pdo;
 	}
 
 	public function findUrlByTag($tag)
@@ -52,7 +52,7 @@ class UrlRepository {
 	 */
 	private function getConnection()
 	{
-		return $this->db;
+		return $this->pdo->getConnection();
 	}
 
 }
