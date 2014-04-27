@@ -35,6 +35,13 @@ class UrlRepositoryTest extends \PHPUnit_Extensions_Database_TestCase {
 		$this->assertEquals('bar', $this->sut->findTagByUrl('http://facebook.com'));
 	}
 
+	public function testInsertTag()
+	{
+		$this->assertTrue($this->sut->insert('baz', 'http://twitter.com'));
+
+		$this->assertEquals('baz', $this->sut->findTagByUrl('http://twitter.com'));
+	}
+
 	protected function getConnection()
 	{
 		$db = new \PDO('mysql:host=localhost;dbname=shorty', 'root', '');
