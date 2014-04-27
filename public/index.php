@@ -30,7 +30,7 @@ if (METHOD == 'GET' && (PATH == '/' || PATH == ''))
 
 if ($controller)
 {
-	$controller();
+	echo $controller();
 	die;
 }
 else

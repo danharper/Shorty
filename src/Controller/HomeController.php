@@ -13,8 +13,7 @@ class HomeController {
 		}
 
 		$view = new \Shorty\View();
-		$view->render('home', ['error' => $error2]);
-
+		return $view->render('home', ['error' => $error2]);
 	}
 
 } 
