@@ -25,15 +25,9 @@ if (METHOD == 'GET' && PATH != '/' && PATH != '')
 
 if (METHOD == 'GET' && (PATH == '/' || PATH == ''))
 {
-	if (array_key_exists('error_flash', $_SESSION)) {
-		$error = $_SESSION['error_flash'];
-		unset($_SESSION['error_flash']);
-	}
-	else {
-		$error = null;
-	}
-
-	include '../web/home.tmpl.php';
+	$controller = new \Shorty\Controller\HomeController();
+	$controller();
+	die;
 }
 else
 {
