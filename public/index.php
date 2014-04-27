@@ -11,23 +11,25 @@ define('PATH', isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
 
 $urlRepository = new \Shorty\UrlRepository(new \Shorty\MySqlPdoFactory());
 
+$controller = null;
+
 if (METHOD == 'POST' && (PATH == '/' || PATH == ''))
 {
 	$controller = new \Shorty\Controller\CreateTagController($urlRepository);
-	$controller();
-	die;
 }
 
 if (METHOD == 'GET' && PATH != '/' && PATH != '')
 {
 	$controller = new \Shorty\Controller\TagRedirectController($urlRepository);
-	$controller();
-	die;
 }
 
 if (METHOD == 'GET' && (PATH == '/' || PATH == ''))
 {
 	$controller = new \Shorty\Controller\HomeController();
+}
+
+if ($controller)
+{
 	$controller();
 	die;
 }
