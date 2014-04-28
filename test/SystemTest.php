@@ -92,7 +92,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase {
 		$this->db->exec('INSERT INTO urls (tag, url, created_at) VALUES ("foo", "http://facebook.com", NOW())');
 
 		$this->client->followRedirects(false);
-		$this->client->request('GET', self::ROOT_URL.'/foo');
+		$this->client->request('GET', self::ROOT_URL.'foo');
 
 		$response = $this->client->getResponse();
 
@@ -102,13 +102,13 @@ class SystemTest extends \PHPUnit_Framework_TestCase {
 
 	public function testRequestingBadUrlShowsError()
 	{
-		$crawler = $this->client->request('GET', self::ROOT_URL.'/foo');
+		$crawler = $this->client->request('GET', self::ROOT_URL.'foo');
 		$this->assertEquals('Error: Shortened URL not found', $crawler->filter('p.error')->text());
 	}
 
 	public function testCompletelyBadRequest()
 	{
-		$crawler = $this->client->request('POST', self::ROOT_URL.'/foo');
+		$crawler = $this->client->request('POST', self::ROOT_URL.'foo');
 		$this->assertEquals('Unknown Request', $crawler->text());
 	}
 
