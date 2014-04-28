@@ -96,7 +96,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase {
 
 		$response = $this->client->getResponse();
 
-		$this->assertEquals(301, $response->getStatus());
+		$this->assertEquals(302, $response->getStatus());
 		$this->assertEquals('http://facebook.com', $response->getHeader('location'));
 	}
 

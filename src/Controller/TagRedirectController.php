@@ -18,7 +18,7 @@ class TagRedirectController {
 
 		if ($url)
 		{
-			return new RedirectResponse($url, 301);
+			return new RedirectResponse($url);
 		}
 		else
 		{
