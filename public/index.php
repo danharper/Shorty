@@ -12,8 +12,6 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 $container = new \Illuminate\Container\Container();
 $container->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
 
-$controller = null;
-
 $routes = [
 	['GET', '/', 'Shorty\Controller\HomeController'],
 	['POST', '/', 'Shorty\Controller\CreateTagController'],
