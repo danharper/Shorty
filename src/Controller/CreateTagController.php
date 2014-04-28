@@ -5,6 +5,7 @@ use Shorty\UrlRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class CreateTagController {
 
@@ -14,12 +15,12 @@ class CreateTagController {
 		$this->tagGenerator = $tagGenerator;
 	}
 
-	public function __invoke(Request $request)
+	public function __invoke(Request $request, Session $session)
 	{
 		$url = $request->request->get('url');
 
 		if ( ! $url) {
-			$_SESSION['error_flash'] = 'No URL Given';
+			$session->getFlashBag()->add('error_flash', 'No URL Given');
 			return new RedirectResponse('/');
 		}
 

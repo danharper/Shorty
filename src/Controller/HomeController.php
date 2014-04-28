@@ -1,21 +1,18 @@
 <?php namespace Shorty\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class HomeController {
 
-	public function __invoke()
+	public function __invoke(Request $request, Session $session)
 	{
-		if (array_key_exists('error_flash', $_SESSION)) {
-			$error2 = $_SESSION['error_flash'];
-			unset($_SESSION['error_flash']);
-		}
-		else {
-			$error2 = null;
-		}
+		$errors = $session->getFlashBag()->get('error_flash');
+		$error = count($errors) ? $errors[0] : null;
 
 		$view = new \Shorty\View();
-		return new Response($view->render('home', ['error' => $error2]));
+		return new Response($view->render('home', ['error' => $error]));
 	}
 
 } 

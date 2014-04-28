@@ -3,6 +3,7 @@
 use Shorty\UrlRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TagRedirectController {
 
@@ -11,7 +12,7 @@ class TagRedirectController {
 		$this->urlRepository = $urlRepository;
 	}
 
-	public function __invoke(Request $request)
+	public function __invoke(Request $request, Session $session)
 	{
 		$key = ltrim($request->getPathInfo(), '/');
 
@@ -23,7 +24,7 @@ class TagRedirectController {
 		}
 		else
 		{
-			$_SESSION['error_flash'] = 'Shortened URL not found';
+			$session->getFlashBag()->add('error_flash', 'Shortened URL not found');
 			return new RedirectResponse('/');
 		}
 	}

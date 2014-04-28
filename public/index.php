@@ -4,7 +4,8 @@ require '../vendor/autoload.php';
 
 define('TEMPLATE_ROOT', '../web');
 
-session_start();
+$session = new \Symfony\Component\HttpFoundation\Session\Session;
+$session->start();
 
 $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
@@ -30,7 +31,7 @@ if ($request->getMethod() == 'GET' && ($request->getPathInfo() == '/' || $reques
 
 if ($controller)
 {
-	$response = $controller($request);
+	$response = $controller($request, $session);
 	$response->prepare($request)->send();
 	die;
 }
