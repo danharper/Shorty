@@ -30,7 +30,7 @@ if ($request->getMethod() == 'GET' && ($request->getPathInfo() == '/' || $reques
 if ($controller)
 {
 	$response = $controller($request);
-	$response->send();
+	$response->prepare($request)->send();
 	die;
 }
 else
