@@ -2,6 +2,7 @@
 
 use Shorty\UrlRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class TagRedirectController {
 
@@ -10,9 +11,9 @@ class TagRedirectController {
 		$this->urlRepository = $urlRepository;
 	}
 
-	public function __invoke()
+	public function __invoke(Request $request)
 	{
-		$key = ltrim(PATH, '/');
+		$key = ltrim($request->getPathInfo(), '/');
 
 		$url = $this->urlRepository->findUrlByTag($key);
 

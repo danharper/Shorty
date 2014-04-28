@@ -6,31 +6,30 @@ define('TEMPLATE_ROOT', '../web');
 
 session_start();
 
-define('METHOD', $_SERVER['REQUEST_METHOD']);
-define('PATH', isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
+$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
 $urlRepository = new \Shorty\UrlRepository(new \Shorty\MySqlPdoFactory());
 
 $controller = null;
 
-if (METHOD == 'POST' && (PATH == '/' || PATH == ''))
+if ($request->getMethod() == 'POST' && ($request->getPathInfo() == '/' || $request->getPathInfo() == ''))
 {
 	$controller = new \Shorty\Controller\CreateTagController($urlRepository);
 }
 
-if (METHOD == 'GET' && PATH != '/' && PATH != '')
+if ($request->getMethod() == 'GET' && $request->getPathInfo() != '/' && $request->getPathInfo() != '')
 {
 	$controller = new \Shorty\Controller\TagRedirectController($urlRepository);
 }
 
-if (METHOD == 'GET' && (PATH == '/' || PATH == ''))
+if ($request->getMethod() == 'GET' && ($request->getPathInfo() == '/' || $request->getPathInfo() == ''))
 {
 	$controller = new \Shorty\Controller\HomeController();
 }
 
 if ($controller)
 {
-	$response = $controller();
+	$response = $controller($request);
 	$response->send();
 	die;
 }

@@ -2,6 +2,7 @@
 
 use Shorty\UrlRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateTagController {
@@ -11,19 +12,21 @@ class CreateTagController {
 		$this->urlRepository = $urlRepository;
 	}
 
-	public function __invoke()
+	public function __invoke(Request $request)
 	{
-		if ( ! array_key_exists('url', $_POST) || ! $_POST['url']) {
+		$url = $request->request->get('url');
+		$host = $request->server->get('HTTP_HOST');
+
+		if ( ! $url) {
 			$_SESSION['error_flash'] = 'No URL Given';
 			return new RedirectResponse('/');
 		}
 		else {
-			$url = $_POST['url'];
 			$tag = $this->urlRepository->findTagByUrl($url);
 
 			if ($tag)
 			{
-				$link = 'http://'.$_SERVER['HTTP_HOST'].'/'.$tag;
+				$link = "http://$host/$tag";
 				$view = new \Shorty\View();
 				return new Response($view->render('link', ['link' => $link]));
 			}
@@ -37,7 +40,7 @@ class CreateTagController {
 					for ($i = 0; $i < 10; $i++) $tag .= $chars[rand(0, strlen($chars) - 1)];
 
 					if ($this->urlRepository->insert($tag, $url)) {
-						$link = 'http://'.$_SERVER['HTTP_HOST'].'/'.$tag;
+						$link = "http://$host/$tag";
 						$view = new \Shorty\View();
 						return new Response($view->render('link', ['link' => $link]));
 					}
