@@ -14,23 +14,29 @@ $tagGenerator = new \Shorty\TagGenerator($urlRepository);
 
 $controller = null;
 
-if ($request->isMethod('POST') && ($request->getPathInfo() == '/' || $request->getPathInfo() == ''))
-{
-	$controller = new \Shorty\Controller\CreateTagController($urlRepository, $tagGenerator);
+$routes = [
+	['GET', '/', function() {
+		return new \Shorty\Controller\HomeController();
+	}],
+	['POST', '/', function() use ($urlRepository, $tagGenerator) {
+		return new \Shorty\Controller\CreateTagController($urlRepository, $tagGenerator);
+	}],
+	['GET', '*', function() use ($urlRepository) {
+		return new \Shorty\Controller\TagRedirectController($urlRepository);
+	}],
+];
+
+function findController($routes, $request) {
+	foreach ($routes as list($method, $route, $callable)) {
+		if ($request->isMethod($method) && ($request->getPathInfo() == $route || $route == '*')) {
+			return $callable;
+		}
+	}
 }
 
-if ($request->isMethod('GET') && $request->getPathInfo() != '/' && $request->getPathInfo() != '')
+if ($callable = findController($routes, $request))
 {
-	$controller = new \Shorty\Controller\TagRedirectController($urlRepository);
-}
-
-if ($request->isMethod('GET') && ($request->getPathInfo() == '/' || $request->getPathInfo() == ''))
-{
-	$controller = new \Shorty\Controller\HomeController();
-}
-
-if ($controller)
-{
+	$controller = $callable();
 	$response = $controller($request, $session);
 	$response->prepare($request)->send();
 	die;
