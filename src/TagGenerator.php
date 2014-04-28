@@ -12,9 +12,7 @@ class TagGenerator {
 		$tries = 0;
 
 		while ($tries < 5) {
-			$chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-			$tag = '';
-			for ($i = 0; $i < 10; $i++) $tag .= $chars[rand(0, strlen($chars) - 1)];
+			$tag = $this->createRandomString();
 
 			if ($this->urlRepository->insert($tag, $url)) {
 				return $tag;
@@ -24,6 +22,19 @@ class TagGenerator {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function createRandomString($length = 10)
+	{
+		$chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$tag = '';
+		for ($i = 0; $i < $length; $i ++)
+			$tag .= $chars[rand(0, strlen($chars) - 1)];
+
+		return $tag;
 	}
 
 } 
