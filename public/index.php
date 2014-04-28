@@ -9,20 +9,22 @@ $session->start();
 
 $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
-$urlRepository = new \Shorty\UrlRepository(new \Shorty\MySqlPdoFactory());
-$tagGenerator = new \Shorty\TagGenerator($urlRepository);
-
 $controller = null;
 
 $routes = [
 	['GET', '/', function() {
-		return new \Shorty\Controller\HomeController();
+		$container = new \Illuminate\Container\Container();
+		return $container->make('Shorty\Controller\HomeController');
 	}],
-	['POST', '/', function() use ($urlRepository, $tagGenerator) {
-		return new \Shorty\Controller\CreateTagController($urlRepository, $tagGenerator);
+	['POST', '/', function() {
+		$container = new \Illuminate\Container\Container();
+		$container->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
+		return $container->make('Shorty\Controller\CreateTagController');
 	}],
-	['GET', '*', function() use ($urlRepository) {
-		return new \Shorty\Controller\TagRedirectController($urlRepository);
+	['GET', '*', function() {
+		$container = new \Illuminate\Container\Container();
+		$container->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
+		return $container->make('Shorty\Controller\TagRedirectController');
 	}],
 ];
 
