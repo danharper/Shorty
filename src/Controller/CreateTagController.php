@@ -23,13 +23,9 @@ class CreateTagController {
 			return new RedirectResponse('/');
 		}
 
-		$tag = $this->urlRepository->findTagByUrl($url);
+		$tag = $this->urlRepository->findTagByUrl($url) ?: $this->tagGenerator->make($url);
 
 		if ($tag)
-		{
-			return $this->respondWithLink($request, $tag);
-		}
-		else if ($tag = $this->tagGenerator->make($url))
 		{
 			return $this->respondWithLink($request, $tag);
 		}
