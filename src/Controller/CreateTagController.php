@@ -2,6 +2,7 @@
 
 use Shorty\UrlRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class CreateTagController {
 
@@ -23,7 +24,8 @@ class CreateTagController {
 			if ($tag)
 			{
 				$link = 'http://'.$_SERVER['HTTP_HOST'].'/'.$tag;
-				die("<a href='$link'>$link</a>");
+				$view = new \Shorty\View();
+				return new Response($view->render('link', ['link' => $link]));
 			}
 			else
 			{
@@ -36,7 +38,8 @@ class CreateTagController {
 
 					if ($this->urlRepository->insert($tag, $url)) {
 						$link = 'http://'.$_SERVER['HTTP_HOST'].'/'.$tag;
-						die("<a href='$link'>$link</a>");
+						$view = new \Shorty\View();
+						return new Response($view->render('link', ['link' => $link]));
 					}
 					$tries++;
 				}
