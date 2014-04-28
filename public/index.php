@@ -9,23 +9,15 @@ $session->start();
 
 $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
+$container = new \Illuminate\Container\Container();
+$container->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
+
 $controller = null;
 
 $routes = [
-	['GET', '/', function() {
-		$container = new \Illuminate\Container\Container();
-		return $container->make('Shorty\Controller\HomeController');
-	}],
-	['POST', '/', function() {
-		$container = new \Illuminate\Container\Container();
-		$container->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
-		return $container->make('Shorty\Controller\CreateTagController');
-	}],
-	['GET', '*', function() {
-		$container = new \Illuminate\Container\Container();
-		$container->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
-		return $container->make('Shorty\Controller\TagRedirectController');
-	}],
+	['GET', '/', 'Shorty\Controller\HomeController'],
+	['POST', '/', 'Shorty\Controller\CreateTagController'],
+	['GET', '*', 'Shorty\Controller\TagRedirectController'],
 ];
 
 function findController($routes, $request) {
@@ -38,7 +30,7 @@ function findController($routes, $request) {
 
 if ($callable = findController($routes, $request))
 {
-	$controller = $callable();
+	$controller = $container->make($callable);
 	$response = $controller($request, $session);
 	$response->prepare($request)->send();
 	die;
