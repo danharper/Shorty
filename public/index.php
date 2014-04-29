@@ -31,14 +31,15 @@ $context->fromRequest($request);
 
 $matcher = new UrlMatcher($routes, $context);
 
-$resolver = new ControllerResolver();
+$resolver = new ControllerResolver(null, $container);
 
 try {
 	$request->attributes->add($matcher->match($request->getPathInfo()));
 
 	$controller = $resolver->getController($request);
-	die($controller);
 
+	$response = $controller($request, $session);
+	$response->prepare($request)->send();
 }
 catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
 	die('Unknown Request');
@@ -47,8 +48,3 @@ catch (\Symfony\Component\Routing\Exception\MethodNotAllowedException $e) {
 	die('Unknown Request');
 }
 
-//$controller = $attributes['controller'];
-//$controller = $container->make($controller);
-//
-//$response = $controller($request, $session);
-//$response->prepare($request)->send();
