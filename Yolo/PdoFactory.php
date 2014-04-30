@@ -1,4 +1,4 @@
-<?php namespace Shorty;
+<?php namespace Yolo;
 
 interface PdoFactory {
 

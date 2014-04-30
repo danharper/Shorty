@@ -1,5 +1,7 @@
 <?php namespace Shorty;
 
+use Yolo\PdoFactory;
+
 class UrlRepository {
 
 	public function __construct(PdoFactory $pdo)

@@ -1,4 +1,4 @@
-<?php namespace Shorty;
+<?php namespace Yolo;
 
 use Illuminate\Container\Container;
 use Psr\Log\LoggerInterface;

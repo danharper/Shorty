@@ -5,12 +5,13 @@ use Shorty\UrlRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Yolo\View;
 
 class CreateTagController {
 
-	public function __construct(UrlRepository $urlRepository, TagGenerator $tagGenerator)
+	public function __construct(View $view, UrlRepository $urlRepository, TagGenerator $tagGenerator)
 	{
+		$this->view = $view;
 		$this->urlRepository = $urlRepository;
 		$this->tagGenerator = $tagGenerator;
 	}
@@ -41,8 +42,7 @@ class CreateTagController {
 	{
 		$host = $request->server->get('HTTP_HOST');
 		$link = "http://$host/$tag";
-		$view = new \Shorty\View();
-		return new Response($view->render('link', ['link' => $link]));
+		return new Response($this->view->render('link', ['link' => $link]));
 	}
 
 } 

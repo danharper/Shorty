@@ -1,4 +1,4 @@
-<?php namespace Shorty;
+<?php namespace Yolo;
 
 use Illuminate\Container\Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,12 @@ class Kernel extends Container implements HttpKernelInterface {
 			$request->setSession($container['session']);
 			return $request;
 		});
+
+		$this->bind(View::class, function($container) {
+			return new View($container['config.template_path']);
+		});
 	}
+
 	/**
 	 * Handles a Request to convert it to a Response.
 	 * When $catch is true, the implementation must catch all exceptions
@@ -47,7 +52,6 @@ class Kernel extends Container implements HttpKernelInterface {
 
 		return $response;
 	}
-
 
 	public function __invoke()
 	{
