@@ -15,12 +15,12 @@ class CreateTagController {
 		$this->tagGenerator = $tagGenerator;
 	}
 
-	public function __invoke(Request $request, Session $session)
+	public function __invoke(Request $request)
 	{
 		$url = $request->request->get('url');
 
 		if ( ! $url) {
-			$session->getFlashBag()->add('error_flash', 'No URL Given');
+			$request->getSession()->getFlashBag()->add('error_flash', 'No URL Given');
 			return new RedirectResponse('/');
 		}
 

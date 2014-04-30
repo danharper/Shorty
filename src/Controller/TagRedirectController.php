@@ -7,16 +7,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class TagRedirectController {
 
-	public function __construct(UrlRepository $urlRepository)
+	public function __construct(UrlRepository $urlRepository, Session $session)
 	{
 		$this->urlRepository = $urlRepository;
+		$this->session = $session;
 	}
 
-	public function __invoke(Request $request, Session $session)
+	public function __invoke($tag, Request $request)
 	{
-		$key = ltrim($request->getPathInfo(), '/');
+//		$key = ltrim($request->getPathInfo(), '/');
 
-		$url = $this->urlRepository->findUrlByTag($key);
+		$url = $this->urlRepository->findUrlByTag($tag);
 
 		if ($url)
 		{
@@ -24,7 +25,7 @@ class TagRedirectController {
 		}
 		else
 		{
-			$session->getFlashBag()->add('error_flash', 'Shortened URL not found');
+			$this->session->getFlashBag()->add('error_flash', 'Shortened URL not found');
 			return new RedirectResponse('/');
 		}
 	}

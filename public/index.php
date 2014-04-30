@@ -17,9 +17,11 @@ $session = new Session;
 $session->start();
 
 $request = Request::createFromGlobals();
+$request->setSession($session);
 
 $container = new Container();
 $container->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
+$container->instance(Session::class, $session);
 
 $routes = new RouteCollection();
 $routes->add('create_tag', (new Route('/', ['_controller' => 'Shorty\Controller\CreateTagController']))->setMethods('POST'));
@@ -37,8 +39,11 @@ try {
 	$request->attributes->add($matcher->match($request->getPathInfo()));
 
 	$controller = $resolver->getController($request);
+	$arguments = $resolver->getArguments($request, $controller);
+//	var_dump($arguments); die;
 
-	$response = $controller($request, $session);
+//	$response = $controller($request, $session);
+	$response = call_user_func_array($controller, $arguments);
 	$response->prepare($request)->send();
 }
 catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
