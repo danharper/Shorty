@@ -2,10 +2,18 @@
 
 class MySqlPdoFactory implements PdoFactory {
 
-	private $host = 'localhost';
-	private $user = 'root';
-	private $password = '';
-	private $database = 'shorty';
+	private $host;
+	private $user;
+	private $password;
+	private $database;
+
+	public function __construct($host, $user, $password, $database)
+	{
+		$this->host = $host;
+		$this->user = $user;
+		$this->password = $password;
+		$this->database = $database;
+	}
 
 	/**
 	 * @return \PDO

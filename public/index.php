@@ -10,6 +10,10 @@ require '../vendor/autoload.php';
 $app = new Kernel;
 
 $app['config.template_path'] = __DIR__.'/../web';
+$app['config.mysql.host'] = 'localhost';
+$app['config.mysql.user'] = 'root';
+$app['config.mysql.password'] = '';
+$app['config.mysql.database'] = 'shorty';
 
 $app->post('/', CreateTagController::class);
 $app->get('/', HomeController::class);

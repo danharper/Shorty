@@ -32,6 +32,15 @@ class Kernel extends Container implements HttpKernelInterface {
 		$this->bind(View::class, function($container) {
 			return new View($container['config.template_path']);
 		});
+
+		$this->bind(MySqlPdoFactory::class, function($container) {
+			return new MySqlPdoFactory(
+				$container['config.mysql.host'],
+				$container['config.mysql.user'],
+				$container['config.mysql.password'],
+				$container['config.mysql.database']
+			);
+		});
 	}
 
 	/**
