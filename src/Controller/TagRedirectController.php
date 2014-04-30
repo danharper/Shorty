@@ -10,13 +10,12 @@ class TagRedirectController {
 	public function __construct(UrlRepository $urlRepository, Session $session)
 	{
 		$this->urlRepository = $urlRepository;
+		if ( ! $session->isStarted()) throw new \Exception("WIWJ");
 		$this->session = $session;
 	}
 
 	public function __invoke($tag, Request $request)
 	{
-//		$key = ltrim($request->getPathInfo(), '/');
-
 		$url = $this->urlRepository->findUrlByTag($tag);
 
 		if ($url)

@@ -3,12 +3,32 @@
 use Illuminate\Container\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 class Kernel extends Container implements HttpKernelInterface {
 
+	public function __construct()
+	{
+		$this->alias('router', Router::class);
+		$this->bindShared('router', function($container) {
+			return new Router($container);
+		});
+
+		$this->alias('session', Session::class);
+		$this->bindShared('session', function() {
+			$session = new Session();
+			$session->start();
+			return $session;
+		});
+
+		$this->alias('request', Request::class);
+		$this->bindShared('request', function($container) {
+			$request = Request::createFromGlobals();
+			$request->setSession($container['session']);
+			return $request;
+		});
+	}
 	/**
 	 * Handles a Request to convert it to a Response.
 	 * When $catch is true, the implementation must catch all exceptions
@@ -23,20 +43,15 @@ class Kernel extends Container implements HttpKernelInterface {
 	 */
 	public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
 	{
-		$matcher = $this[UrlMatcherInterface::class];
-
-		$request->attributes->add($matcher->match($request->getPathInfo()));
-
-		$resolver = $this[ControllerResolverInterface::class];
-
-		$controller = $resolver->getController($request);
-		$arguments = $resolver->getArguments($request, $controller);
-
-		$response = call_user_func_array($controller, $arguments);
-
-		$response->prepare($request);
+		$response = $this['router']->handle($request);
 
 		return $response;
 	}
-	
+
+
+	public function __invoke()
+	{
+		return $this->handle($this['request']);
+	}
+
 } 

@@ -18,35 +18,16 @@ define('TEMPLATE_ROOT', '../web');
 
 $kernel = new Kernel;
 
-$session = new Session;
-$session->start();
+$router = $kernel['router'];
 
-$request = Request::createFromGlobals();
-$request->setSession($session);
+$router->addRoute('create_tag', (new Route('/', ['_controller' => 'Shorty\Controller\CreateTagController']))->setMethods('POST'));
+$router->addRoute('home', (new Route('/', ['_controller' => 'Shorty\Controller\HomeController']))->setMethods('GET'));
+$router->addRoute('redirect_tag', (new Route('/{tag}', ['_controller' => 'Shorty\Controller\TagRedirectController']))->setMethods('GET'));
 
-$container = new Container();
-$container->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
-$container->instance(Session::class, $session);
-
-$routes = new RouteCollection();
-
-$context = new RequestContext();
-$context->fromRequest($request);
-
-$matcher = new UrlMatcher($routes, $context);
-
-$resolver = new ControllerResolver(null, $container);
-
-$kernel->instance(ControllerResolverInterface::class, $resolver);
-$kernel->instance(UrlMatcherInterface::class, $matcher);
-
-$routes->add('create_tag', (new Route('/', ['_controller' => 'Shorty\Controller\CreateTagController']))->setMethods('POST'));
-$routes->add('home', (new Route('/', ['_controller' => 'Shorty\Controller\HomeController']))->setMethods('GET'));
-$routes->add('redirect_tag', (new Route('/{tag}', ['_controller' => 'Shorty\Controller\TagRedirectController']))->setMethods('GET'));
+$kernel->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
 
 try {
-	$response = $kernel->handle($request);
-	$response->send();
+	$kernel()->send();
 }
 catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
 	die('Unknown Request');
