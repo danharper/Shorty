@@ -2,9 +2,12 @@
 
 use Illuminate\Container\Container;
 use Shorty\ControllerResolver;
+use Shorty\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -12,6 +15,8 @@ use Symfony\Component\Routing\RouteCollection;
 require '../vendor/autoload.php';
 
 define('TEMPLATE_ROOT', '../web');
+
+$kernel = new Kernel;
 
 $session = new Session;
 $session->start();
@@ -24,9 +29,6 @@ $container->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
 $container->instance(Session::class, $session);
 
 $routes = new RouteCollection();
-$routes->add('create_tag', (new Route('/', ['_controller' => 'Shorty\Controller\CreateTagController']))->setMethods('POST'));
-$routes->add('home', (new Route('/', ['_controller' => 'Shorty\Controller\HomeController']))->setMethods('GET'));
-$routes->add('redirect_tag', (new Route('/{tag}', ['_controller' => 'Shorty\Controller\TagRedirectController']))->setMethods('GET'));
 
 $context = new RequestContext();
 $context->fromRequest($request);
@@ -35,16 +37,16 @@ $matcher = new UrlMatcher($routes, $context);
 
 $resolver = new ControllerResolver(null, $container);
 
+$kernel->instance(ControllerResolverInterface::class, $resolver);
+$kernel->instance(UrlMatcherInterface::class, $matcher);
+
+$routes->add('create_tag', (new Route('/', ['_controller' => 'Shorty\Controller\CreateTagController']))->setMethods('POST'));
+$routes->add('home', (new Route('/', ['_controller' => 'Shorty\Controller\HomeController']))->setMethods('GET'));
+$routes->add('redirect_tag', (new Route('/{tag}', ['_controller' => 'Shorty\Controller\TagRedirectController']))->setMethods('GET'));
+
 try {
-	$request->attributes->add($matcher->match($request->getPathInfo()));
-
-	$controller = $resolver->getController($request);
-	$arguments = $resolver->getArguments($request, $controller);
-//	var_dump($arguments); die;
-
-//	$response = $controller($request, $session);
-	$response = call_user_func_array($controller, $arguments);
-	$response->prepare($request)->send();
+	$response = $kernel->handle($request);
+	$response->send();
 }
 catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
 	die('Unknown Request');
