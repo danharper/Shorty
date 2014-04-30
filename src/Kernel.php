@@ -54,4 +54,24 @@ class Kernel extends Container implements HttpKernelInterface {
 		return $this->handle($this['request']);
 	}
 
+	public function get()
+	{
+		call_user_func_array([$this['router'], 'add'], array_merge(['GET'], func_get_args()));
+	}
+
+	public function post()
+	{
+		call_user_func_array([$this['router'], 'add'], array_merge(['POST'], func_get_args()));
+	}
+
+	public function put()
+	{
+		call_user_func_array([$this['router'], 'add'], array_merge(['PUT'], func_get_args()));
+	}
+
+	public function delete()
+	{
+		call_user_func_array([$this['router'], 'add'], array_merge(['DELETE'], func_get_args()));
+	}
+
 } 

@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Container\Container;
+use Shorty\Controller\CreateTagController;
+use Shorty\Controller\HomeController;
+use Shorty\Controller\TagRedirectController;
 use Shorty\ControllerResolver;
 use Shorty\Kernel;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,9 +21,9 @@ define('TEMPLATE_ROOT', '../web');
 
 $app = new Kernel;
 
-$app['router']->add('POST', '/', 'Shorty\Controller\CreateTagController');
-$app['router']->add('GET', '/', 'Shorty\Controller\HomeController');
-$app['router']->add('GET', '/{tag}', 'Shorty\Controller\TagRedirectController');
+$app->post('/', CreateTagController::class);
+$app->get('/', HomeController::class);
+$app->get('/{tag}', TagRedirectController::class);
 
 $app->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
 
