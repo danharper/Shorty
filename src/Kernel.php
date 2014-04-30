@@ -51,7 +51,7 @@ class Kernel extends Container implements HttpKernelInterface {
 
 	public function __invoke()
 	{
-		return $this->handle($this['request']);
+		return $this->handle($this['request'])->send();
 	}
 
 	public function get()
@@ -74,4 +74,4 @@ class Kernel extends Container implements HttpKernelInterface {
 		call_user_func_array([$this['router'], 'add'], array_merge(['DELETE'], func_get_args()));
 	}
 
-} 
+}

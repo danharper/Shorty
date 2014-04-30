@@ -28,7 +28,7 @@ $app->get('/{tag}', TagRedirectController::class);
 $app->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
 
 try {
-	$app()->send();
+	$app();
 }
 catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
 	die('Unknown Request');
