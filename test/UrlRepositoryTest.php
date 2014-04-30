@@ -12,7 +12,7 @@ class UrlRepositoryTest extends \PHPUnit_Extensions_Database_TestCase {
 	public function setUp()
 	{
 		parent::setUp();
-		$this->sut = new UrlRepository(new \Shorty\MySqlPdoFactory());
+		$this->sut = new UrlRepository(new \Yolo\MySqlPdoFactory('localhost', 'root', '', 'shorty'));
 	}
 
 	public function testFindUrlByTagReturnsNullWhenNotFound()

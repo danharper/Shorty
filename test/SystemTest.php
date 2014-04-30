@@ -21,7 +21,7 @@ class SystemTest extends \PHPUnit_Framework_TestCase {
 		$this->client = new Client;
 		$this->crawler = $this->client->request('GET', self::ROOT_URL);
 
-		$this->db = (new \Shorty\MySqlPdoFactory())->getConnection();
+		$this->db = (new \Yolo\MySqlPdoFactory('localhost', 'root', '', 'shorty'))->getConnection();
 		$this->db->exec("DELETE FROM urls");
 	}
 
