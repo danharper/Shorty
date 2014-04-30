@@ -52,4 +52,12 @@ class Router implements HttpKernelInterface {
 		$this->routes->add($name, $route);
 	}
 
+	public function add($methods, $path, $controller, array $defaults = [], array $requirements = [])
+	{
+		$methods = (array) $methods;
+		$defaults = array_merge($defaults, ['_controller' => $controller]);
+
+		$this->addRoute($controller, new Route($path, $defaults, $requirements, [], null, [], $methods));
+	}
+
 }

@@ -16,18 +16,16 @@ require '../vendor/autoload.php';
 
 define('TEMPLATE_ROOT', '../web');
 
-$kernel = new Kernel;
+$app = new Kernel;
 
-$router = $kernel['router'];
+$app['router']->add('POST', '/', 'Shorty\Controller\CreateTagController');
+$app['router']->add('GET', '/', 'Shorty\Controller\HomeController');
+$app['router']->add('GET', '/{tag}', 'Shorty\Controller\TagRedirectController');
 
-$router->addRoute('create_tag', (new Route('/', ['_controller' => 'Shorty\Controller\CreateTagController']))->setMethods('POST'));
-$router->addRoute('home', (new Route('/', ['_controller' => 'Shorty\Controller\HomeController']))->setMethods('GET'));
-$router->addRoute('redirect_tag', (new Route('/{tag}', ['_controller' => 'Shorty\Controller\TagRedirectController']))->setMethods('GET'));
-
-$kernel->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
+$app->bind('Shorty\PdoFactory', 'Shorty\MySqlPdoFactory');
 
 try {
-	$kernel()->send();
+	$app()->send();
 }
 catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
 	die('Unknown Request');
